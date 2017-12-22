@@ -23,7 +23,7 @@ passport.use(
       User.findOne({ googleId: profile.id })
         .then(existingUser => {
           if (existingUser) {
-            
+            done(null, existingUser);
           } else {
             new User({
               googleId: profile.id,
@@ -31,9 +31,10 @@ passport.use(
               email: profile.emails[0].value,
               imageURL: profile.photos[0].value,
               gender: profile.gender
-            }).save();
+            }).save()
+              .then(user => done(null, user));
           }
-        })
+        });
     }
   )
 );
